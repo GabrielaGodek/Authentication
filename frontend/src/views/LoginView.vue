@@ -7,8 +7,8 @@
     </form>
 </template>
 <script lang="ts">
-import { useRouter, useRoute } from 'vue-router'
-import { defineComponent, ref, watch } from 'vue';
+import { useRouter } from 'vue-router'
+import { defineComponent, ref } from 'vue';
 import { requestData } from '../includes/requestData';
 
 export default defineComponent({
@@ -25,6 +25,7 @@ export default defineComponent({
                     password: password.value
                 });
                 if (isLogIn.token) {
+                    sessionStorage.setItem('token', isLogIn.token)
                     router.push('profile')
                 } else {
                     console.error('Invalid token or other error');

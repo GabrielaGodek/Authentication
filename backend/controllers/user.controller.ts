@@ -1,12 +1,11 @@
-import { promisify } from 'util';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { RequestHandler } from 'express';
-
 import { executeQuery } from '../db/db_conn'
 
 export const getUsers: RequestHandler = async (req, res) => {
     try {
+        console.log('get')
         const sql = `SELECT * FROM users`
         const queryResult = await executeQuery(sql);
 
@@ -22,7 +21,9 @@ export const registerUser: RequestHandler = async (req, res) => {
         const sql = `INSERT INTO users(username, password, email, created_at) VALUES (?, ?, ?, ?)`;
         const result = await executeQuery(sql, [username, hashPass, email, created_at]);
 
-        res.status(201).json({ success: true, message: 'User registered successfully' });
+        if (!result) {
+            return res.status(400).json({ success: false, message: 'Invalid data' });
+        }
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: 'Internal Server Error' });
@@ -32,7 +33,6 @@ export const registerUser: RequestHandler = async (req, res) => {
 export const loginUser: RequestHandler = async (req, res) => {
     try {
         const { email, password } = req.body;
-
         if (!email || !password) {
             return res.status(400).json({ message: 'Email and Password are Required' });
         }
@@ -43,6 +43,7 @@ export const loginUser: RequestHandler = async (req, res) => {
         if (result.length === 0) {
             return res.status(400).json({ message: 'No user in the database' });
         }
+        console.log(result)
 
         const isMatch = await bcrypt.compare(password, result[0].password);
 
@@ -57,4 +58,7 @@ export const loginUser: RequestHandler = async (req, res) => {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 };
+
+
+
 

@@ -1,12 +1,15 @@
-const requestData = async (url: string, data?: object): Promise<any> => {
+const requestData = async (url: string, data?: object, header?: Record<string, string>): Promise<any> => {
+    // console.log(header?.Authorization)
     try {
         const options: RequestInit = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                ...(header || {})
             },
             body: data ? JSON.stringify(data) : undefined,
         };
+        // console.log(options.headers)
 
         const response = await fetch(`http://localhost:8080/${url}`, options);
         const responseData = await response.json();

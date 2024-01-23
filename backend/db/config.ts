@@ -1,31 +1,9 @@
-import * as dotenv from 'dotenv'
-// import { DBConfig } from '../includes/types'
+import * as mysql from 'mysql2/promise';
 
-dotenv.config()
-
-
-const MYSQL_HOST = process.env.MYSQL_HOST || 'localhost';
-const MYSQL_USER = process.env.MYSQL_HOST || 'root';
-const MYSQL_PASS = process.env.MYSQL_HOST || '';
-const MYSQL_DATABASE = process.env.MYSQL_DATABASE || 'auth';
-
-const MYSQL = {
-    host: MYSQL_HOST,
-    database: MYSQL_DATABASE,
-    user: MYSQL_USER,
-    pass: MYSQL_PASS
+export const connectionOptions: mysql.PoolOptions = {
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_DB || 'auth',
+    connectionLimit: 10,
 };
-
-const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || 'localhost';
-const SERVER_PORT = process.env.SERVER_PORT || 8080;
-
-const SERVER = {
-    hostname: SERVER_HOSTNAME,
-    port: SERVER_PORT
-};
-const DBconfig = {
-    mysql: MYSQL,
-    server: SERVER
-};
-
-export { DBconfig }
