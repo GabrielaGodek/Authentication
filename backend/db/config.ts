@@ -1,4 +1,5 @@
 import * as mysql from 'mysql2/promise';
+import crypto from 'crypto'
 
 export const connectionOptions: mysql.PoolOptions = {
     host: process.env.DB_HOST || 'localhost',
@@ -7,3 +8,5 @@ export const connectionOptions: mysql.PoolOptions = {
     database: process.env.DB_DB || 'auth',
     connectionLimit: 10,
 };
+
+export const secretKey = crypto.randomBytes(32).toString('hex');

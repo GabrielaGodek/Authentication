@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { RequestHandler } from 'express';
 import { executeQuery } from '../db/db_conn'
+import { secretKey } from '../db/config'
 
 export const getUsers: RequestHandler = async (req, res) => {
     try {
@@ -24,6 +25,8 @@ export const registerUser: RequestHandler = async (req, res) => {
         if (!result) {
             return res.status(400).json({ success: false, message: 'Invalid data' });
         }
+        const token = jwt.sign({ userId: result[0].id }, secretKey, { expiresIn: '1h' });
+        res.json({ success: true, message: 'Register Successful', token });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: 'Internal Server Error' });
@@ -48,7 +51,7 @@ export const loginUser: RequestHandler = async (req, res) => {
         const isMatch = await bcrypt.compare(password, result[0].password);
 
         if (isMatch) {
-            const token = jwt.sign({ userId: result[0].id }, 'my_secret_key', { expiresIn: '1h' });
+            const token = jwt.sign({ userId: result[0].id }, secretKey, { expiresIn: '1h' });
             res.json({ success: true, message: 'Login Successful', token });
         } else {
             res.status(401).json({ success: false, message: 'Invalid email or password' });
