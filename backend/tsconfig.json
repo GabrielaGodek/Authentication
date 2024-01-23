@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    // "esModuleInterop": true,
+    // "moduleResolution": "classic",
+    "target": "es5",
+    "declaration": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "strict": true
+  },
+  "include": ["controllers/**/*.ts", "includes/**/*.ts", "db/**/*.ts", "server.ts"],
+  "exclude": ["node_modules"]
+}
+

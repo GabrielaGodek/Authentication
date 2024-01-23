@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 
-import { getUsers, registerUser, loginUser } from './controllers/operations.js'
+import { getUsers, registerUser, loginUser } from './controllers/user.controller'
 
 const app = express()
 const port = 8080
