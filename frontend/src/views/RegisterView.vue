@@ -3,6 +3,7 @@
         <input type="text" placeholder="Username" v-model="username">
         <input type="email" v-model="email">
         <input type="password" v-model="password">
+        <input type="submit">
     </form>
 </template>
 
@@ -19,11 +20,25 @@ export default defineComponent({
         const username = ref('user')
         const email = ref('mail123@mail')
         const password = ref('098')
-        const created_at = Date.now()
+        const created_at = '2017-10-10'
 
-        const RegisterIn = () => {
-            const isRegister = requestData('register', [username, email, password, created_at])
-            router.push('profile')
+        const RegisterIn = async () => {
+            try {
+                const isRegister = await requestData('register', 'POST', {
+                    username: username.value,
+                    email: email.value,
+                    password: password.value,
+                    created_at: created_at
+                })
+                if (isRegister.token) {
+                    sessionStorage.setItem('token', isRegister.token)
+                    router.push('profile')
+                } else {
+                    console.error('Invalid token or other error');
+                }
+            } catch(err) {
+                console.error('Error during registration:', err);
+            }
         }
         return {
             RegisterIn,

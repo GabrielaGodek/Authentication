@@ -9,16 +9,19 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/login',
         name: 'login',
+        props: route => ({ email: route.query.email }),
         component: () => import('../views/LoginView.vue')
     },
     {
         path: '/register',
         name: 'register',
+        props: route => ({ email: route.query.email }),
         component: () => import('../views/RegisterView.vue')
     },
     {
         path: '/profile',
         name: 'profile',
+        props: route => ({ email: route.query.email }),
         component: () => import('../views/ProfileView.vue')
     }
 ];

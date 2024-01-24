@@ -1,14 +1,17 @@
 import * as jwt from 'jsonwebtoken';
-import { RequestHandler } from 'express';
+import { Response, NextFunction } from 'express';
 import { secretKey } from '../db/config'
+import { MiddlewareRequest } from './types'
 
-export const authenticate: RequestHandler = (req, res, next) => {
+
+export const authenticate = (req: MiddlewareRequest, res: Response, next: NextFunction) => {
     const token = req.header('authorization');
     if (!token) {
         return res.status(401).json({ message: "Unauthorized" })
     }
     try {
-        jwt.verify(token, secretKey)
+        const decodedToken: any = jwt.verify(token, secretKey)
+        req.user = decodedToken
         next();
 
     } catch (err) {

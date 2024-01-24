@@ -20,7 +20,7 @@ export default defineComponent({
 
         const LogIn = async () => {
             try {
-                const isLogIn = await requestData('login', {
+                const isLogIn = await requestData('login', 'POST', {
                     email: email.value,
                     password: password.value
                 });

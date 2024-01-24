@@ -1,8 +1,7 @@
-const requestData = async (url: string, data?: object, header?: Record<string, string>): Promise<any> => {
-    // console.log(header?.Authorization)
+const requestData = async (url: string, method?: string, data?: object, header?: Record<string, string>): Promise<any> => {
     try {
         const options: RequestInit = {
-            method: 'POST',
+            method: method,
             headers: {
                 'Content-Type': 'application/json',
                 ...(header || {})

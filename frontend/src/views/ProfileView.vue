@@ -1,35 +1,39 @@
 <template>
     <div>
-        <h1>Template!</h1>
+        <h1>Hello {{ user.username }}</h1>
     </div>
 </template>
 <script lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, defineComponent } from 'vue';
 import { useRouter } from 'vue-router'
 import { requestData } from '../includes/requestData'
-export default {
+export default defineComponent({
+
     name: 'ProfileView',
     setup() {
         const isAuthenticate = ref(false)
         const router = useRouter()
-        onMounted(() => {
+        const user = ref()
+
+        onMounted(async () => {
+            // console.log(router.params)
             const token = sessionStorage.getItem('token') || null
+            console.log(token)
             if (token) {
-                isAuthenticate.value = true
                 const header = { Authorization: token }
-                const response = requestData('profile', undefined, header)
-                console.log(response)
+                const response = await requestData('profile', 'GET', undefined, header)
+                isAuthenticate.value = true
+                user.value = response.data[0]
+                console.log(response.data)
+                // userData()
             } else {
                 router.push('login')
             }
         })
         return {
-
+            user
         }
     }
 
-}
+})
 </script>
-<style lang="">
-    
-</style>

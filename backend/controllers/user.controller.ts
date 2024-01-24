@@ -1,8 +1,9 @@
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { RequestHandler } from 'express';
+import { RequestHandler, Response } from 'express';
 import { executeQuery } from '../db/db_conn'
 import { secretKey } from '../db/config'
+import { MiddlewareRequest } from '../includes/types'
 
 export const getUsers: RequestHandler = async (req, res) => {
     try {
@@ -18,14 +19,14 @@ export const getUsers: RequestHandler = async (req, res) => {
 export const registerUser: RequestHandler = async (req, res) => {
     try {
         const { username, password, email, created_at } = req.body;
-        const hashPass = await bcrypt.hash(password, 1);
+        const hashPass = await bcrypt.hash(password, 10);
         const sql = `INSERT INTO users(username, password, email, created_at) VALUES (?, ?, ?, ?)`;
         const result = await executeQuery(sql, [username, hashPass, email, created_at]);
 
-        if (!result) {
+        if (!result || !result.insertId) {
             return res.status(400).json({ success: false, message: 'Invalid data' });
         }
-        const token = jwt.sign({ userId: result[0].id }, secretKey, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: result.insertId }, secretKey, { expiresIn: '1h' });
         res.json({ success: true, message: 'Register Successful', token });
     } catch (err) {
         console.error(err);
@@ -46,10 +47,8 @@ export const loginUser: RequestHandler = async (req, res) => {
         if (result.length === 0) {
             return res.status(400).json({ message: 'No user in the database' });
         }
-        console.log(result)
 
         const isMatch = await bcrypt.compare(password, result[0].password);
-
         if (isMatch) {
             const token = jwt.sign({ userId: result[0].id }, secretKey, { expiresIn: '1h' });
             res.json({ success: true, message: 'Login Successful', token });
@@ -61,6 +60,22 @@ export const loginUser: RequestHandler = async (req, res) => {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 };
+
+export const getProfile = async (req: MiddlewareRequest, res: Response) => {
+    try {
+        const userId = req.user?.userId;
+        console.log(userId)
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        const sql = `SELECT * FROM users WHERE id = ?`;
+        const result = await executeQuery(sql, [userId]);
+        res.json({ success: true, data: result })
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+}
 
 
 

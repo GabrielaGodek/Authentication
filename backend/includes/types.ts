@@ -1,4 +1,4 @@
-
+import { Request } from 'express'
 export interface UserRequestBody {
     email: string;
     password: string;
@@ -16,6 +16,9 @@ export interface DBConfig {
     user: string,
     password: string,
     database: string,
+}
+export interface MiddlewareRequest extends Request {
+    user?: any;
 }
 // export interface PoolConfig {
 //     host: string,
