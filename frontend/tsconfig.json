@@ -21,6 +21,10 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
+    "types": [
+      "vue",
+      "vue-simple-password-meter"
+    ],
 
     /* Linting */
     "strict": true,

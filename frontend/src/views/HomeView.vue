@@ -24,28 +24,57 @@ export default defineComponent({
         <br>
         <div class="hero__buttons">
             <router-link to="login">
-                <input class="hero__buttons-login" type="button" value="Login">
+                <div class="hero__button hero__buttons-login">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    Login
+                </div>
+                
             </router-link>
             <router-link to="register">
-                <input class="hero__buttons-register" type="button" value="Register">
+                <div class="hero__button hero__buttons-login">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        Register
+                    </div>
             </router-link>
         </div>
     </main>
 </template>
 
-<style scoped>
-.logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-}
+<style scoped lang="scss">
+.hero .hero__buttons {
+    display: flex;
+    gap: 10px;
 
-.logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-}
+    .hero__button {
+        appearance: none;
+        width: 150px;
+        position: relative;
+        display: inline-block;
+        padding: 10px 20px;
+        color: #03e9f4;
+        font-size: 16px;
+        text-decoration: none;
+        text-transform: uppercase;
+        overflow: hidden;
+        transition: .5s;
+        margin-top: 40px;
+        letter-spacing: 4px;
 
-.logo.vue:hover {
-    filter: drop-shadow(0 0 2em #42b883aa);
+        &:hover {
+            background: #03e9f4;
+            color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4,
+                0 0 100px #03e9f4;
+        }
+    }
 }
 </style>

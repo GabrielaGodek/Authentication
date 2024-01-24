@@ -1,18 +1,18 @@
 <template>
     <Form formLabel="Register Form">
-        <div class="user-box">
-            <input type="text" v-model="username">
+        <div class="form__box">
+            <input class="form__input-username" type="text" v-model="username">
             <label>Username</label>
         </div>
-        <div class="user-box">
-            <input type="email" v-model="email">
+        <div class="form__box">
+            <input class="form__input-email" type="email" v-model="email">
             <label>Email</label>
         </div>
-        <div class="user-box">
-            <input type="password" v-model="password">
+        <div class="form__box">
+            <input class="form__input-password" type="password" v-model="password">
             <label>Password</label>
+            <password-meter :password="password" />
         </div>
-        <div class="strong-password">strong</div>
         <a class="form__input-submit" href="#" @click.prevent="RegisterIn">
             <span></span>
             <span></span>
@@ -26,27 +26,31 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
+// @ts-ignore
+import PasswordMeter from 'vue-simple-password-meter';
 import { requestData } from '../includes/requestData'
 import Form from '../components/FormItem.vue'
 
 export default defineComponent({
     name: 'RegisterView',
     components: {
-        Form
+        Form,
+        PasswordMeter
     },
     setup() {
         const router = useRouter()
         const username = ref('')
         const email = ref('')
-        const password = ref('')
+        const pass = ref('')
         const created_at = '2017-10-10'
+        const password = ref('');
 
         const RegisterIn = async () => {
             try {
                 const isRegister = await requestData('register', 'POST', {
                     username: username.value,
                     email: email.value,
-                    password: password.value,
+                    password: pass.value,
                     created_at: created_at
                 })
                 if (isRegister.token) {
@@ -63,6 +67,7 @@ export default defineComponent({
             RegisterIn,
             username,
             email,
+            pass,
             password
         }
     }
@@ -71,3 +76,10 @@ export default defineComponent({
 })
 
 </script>
+<style>
+.po-password-strength-bar {
+    transition: all 0.2s linear;
+    height: 5px;
+    margin-top: 0px;
+}
+</style>

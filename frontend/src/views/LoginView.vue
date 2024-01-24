@@ -1,10 +1,10 @@
 <template>
     <Form formLabel="Login Form">
-        <div class="user-box">
+        <div class="form__box">
             <input class="form__input-email" type="email" v-model="email" >
             <label>Email</label>
         </div>
-        <div class="user-box">
+        <div class="form__box">
             <input class="form__input-password" type="password" v-model="password">
             <label>Password</label>
         </div>
