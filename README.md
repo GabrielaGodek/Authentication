@@ -3,7 +3,7 @@
 A full-stack application encompassing authentication and authorization. The implementation utilizes JWT technology for secure authentication and bcrypt for effective hashing of user passwords. All users are stored in MySQL database.
 
 ## Installation
-Clone this repo: https://github.com/GabrielaGodek/EasyMail.git.
+Clone this repo: https://github.com/GabrielaGodek/Cryptamine.git.
 1. Open XAMPP and run Apache Web Server and MySQL Database.
 2. Open an type in the browser localhost/phpmyadmin.
 3. Upload auth.sql from backend/db folder.
