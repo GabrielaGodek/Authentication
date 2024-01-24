@@ -1,22 +1,37 @@
 <template>
-    <h1>Log in</h1>
-    <form @submit.prevent="LogIn">
-        <input type="email" v-model="email" placeholder="email">
-        <input type="password" v-model="password" placeholder="password">
-        <input type="submit">
-    </form>
+    <Form formLabel="Login Form">
+        <div class="user-box">
+            <input class="form__input-email" type="email" v-model="email" >
+            <label>Email</label>
+        </div>
+        <div class="user-box">
+            <input class="form__input-password" type="password" v-model="password">
+            <label>Password</label>
+        </div>
+        <a class="form__input-submit" href="#" @click.prevent="LogIn">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Submit
+        </a>
+    </Form>
 </template>
 <script lang="ts">
 import { useRouter } from 'vue-router'
 import { defineComponent, ref } from 'vue';
 import { requestData } from '../includes/requestData';
+import Form from '../components/FormItem.vue'
 
 export default defineComponent({
     name: 'LoginView',
+    components: {
+        Form
+    },
     setup() {
         const router = useRouter()
-        const email = ref('niemail@mail.com');
-        const password = ref('1234');
+        const email = ref('');
+        const password = ref('');
 
         const LogIn = async () => {
             try {
@@ -36,7 +51,6 @@ export default defineComponent({
         }
 
         return {
-            // getUsers,
             email,
             password,
             LogIn

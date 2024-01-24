@@ -64,7 +64,6 @@ export const loginUser: RequestHandler = async (req, res) => {
 export const getProfile = async (req: MiddlewareRequest, res: Response) => {
     try {
         const userId = req.user?.userId;
-        console.log(userId)
         if (!userId) {
             return res.status(401).json({ message: "Unauthorized" });
         }

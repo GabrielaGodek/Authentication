@@ -1,6 +1,8 @@
 <template>
     <div>
-        <h1>Hello {{ user.username }}</h1>
+        <h1 v-if="isAuthenticate">Hello {{ user.username }}</h1>
+        <h1 v-else>Hello </h1>
+
     </div>
 </template>
 <script lang="ts">
@@ -16,22 +18,26 @@ export default defineComponent({
         const user = ref()
 
         onMounted(async () => {
-            // console.log(router.params)
+
             const token = sessionStorage.getItem('token') || null
-            console.log(token)
+            // console.log(token)
             if (token) {
                 const header = { Authorization: token }
                 const response = await requestData('profile', 'GET', undefined, header)
-                isAuthenticate.value = true
-                user.value = response.data[0]
                 console.log(response.data)
-                // userData()
+                if(response.data.length !== 0) {
+                    user.value = response.data[0]
+                    isAuthenticate.value = true
+                } else {
+                    router.push('login')
+                }
             } else {
                 router.push('login')
             }
         })
         return {
-            user
+            user,
+            isAuthenticate
         }
     }
 

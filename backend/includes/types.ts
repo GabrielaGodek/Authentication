@@ -20,10 +20,5 @@ export interface DBConfig {
 export interface MiddlewareRequest extends Request {
     user?: any;
 }
-// export interface PoolConfig {
-//     host: string,
-//     user: string,
-//     password: string,
-//     database: string,
-// }
+
 

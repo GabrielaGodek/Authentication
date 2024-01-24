@@ -1,25 +1,44 @@
 <template>
-    <form @submit.prevent="RegisterIn">
-        <input type="text" placeholder="Username" v-model="username">
-        <input type="email" v-model="email">
-        <input type="password" v-model="password">
-        <input type="submit">
-    </form>
+    <Form formLabel="Register Form">
+        <div class="user-box">
+            <input type="text" v-model="username">
+            <label>Username</label>
+        </div>
+        <div class="user-box">
+            <input type="email" v-model="email">
+            <label>Email</label>
+        </div>
+        <div class="user-box">
+            <input type="password" v-model="password">
+            <label>Password</label>
+        </div>
+        <div class="strong-password">strong</div>
+        <a class="form__input-submit" href="#" @click.prevent="RegisterIn">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Submit
+        </a>
+    </Form>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { requestData } from '../includes/requestData'
+import Form from '../components/FormItem.vue'
 
 export default defineComponent({
     name: 'RegisterView',
+    components: {
+        Form
+    },
     setup() {
-        // const getUsers = ref([])
         const router = useRouter()
-        const username = ref('user')
-        const email = ref('mail123@mail')
-        const password = ref('098')
+        const username = ref('')
+        const email = ref('')
+        const password = ref('')
         const created_at = '2017-10-10'
 
         const RegisterIn = async () => {
@@ -36,7 +55,7 @@ export default defineComponent({
                 } else {
                     console.error('Invalid token or other error');
                 }
-            } catch(err) {
+            } catch (err) {
                 console.error('Error during registration:', err);
             }
         }
