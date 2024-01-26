@@ -32,15 +32,30 @@ const props = defineProps(['formLabel']);
         border-bottom: 1px solid #fff;
         outline: none;
         background: transparent;
+        position: relative;
+
+        &::placeholder {
+            color: transparent;
+        }
+
+        &:focus,
+        &.has-value {
+            ~.form__input-label {
+                top: -20px;
+                left: 0;
+                color: #03e9f4;
+                font-size: 12px;
+            }
+        }
     }
 
     .form__box input.form__input-password {
         margin-bottom: 10px;
     }
 
-    .form__box label {
+    .form__box .form__input-label {
         position: absolute;
-        top: 0;
+        top: 0px;
         left: 0;
         padding: 10px 0;
         font-size: 16px;
@@ -48,12 +63,6 @@ const props = defineProps(['formLabel']);
         pointer-events: none;
         transition: .5s;
     }
-
-    .form__box input:focus~label {
-        top: -20px;
-        left: 0;
-        color: #03e9f4;
-        font-size: 12px;
-    }
 }
 </style>
+

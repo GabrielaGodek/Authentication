@@ -10,12 +10,17 @@ export const authenticate = (req: MiddlewareRequest, res: Response, next: NextFu
     if (!token) {
         return res.status(401).json({ message: "Unauthorized" })
     }
-    try {
-        const decodedToken: any = jwt.verify(token, secretKey)
+    // try {
+    const decodedToken: any = jwt.verify(token, secretKey)
+    console.log('decodedToken')
+    if (decodedToken){
         req.user = decodedToken
         next();
-
-    } catch (err) {
-        res.status(401).json({ message: "Invalid Token" })
+    } else {
+        console.log('Invalid')
     }
+
+    // } catch (err) {
+    // res.status(401).json({ message: "Invalid Token" })
+    // }
 }

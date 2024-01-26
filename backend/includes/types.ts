@@ -20,5 +20,9 @@ export interface DBConfig {
 export interface MiddlewareRequest extends Request {
     user?: any;
 }
+export enum Role {
+    Admin = 'admin',
+    User = 'user'
+}
 
 

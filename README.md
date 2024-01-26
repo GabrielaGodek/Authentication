@@ -32,3 +32,9 @@ Clone this repo: https://github.com/GabrielaGodek/Cryptamine.git.
 - Dotenv: `^16.3.2`,
 - Jsonwebtoken: `^9.0.2`,
 - Mysql2: `^3.7.`
+
+
+
+Try admin user
+email: admin@admin.com
+password: demo

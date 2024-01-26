@@ -1,48 +1,72 @@
 <template>
     <main class="profile">
-        <h1 class="profile__header">Hello 👋</h1>
-        <section class="profile__animation">
-            <div class="profile__animation-first">
-                <div>{{ user.username }}</div>
+        <section class="profile__hero">
+            <h1 class="profile__header">Hello 👋</h1>
+            <div class="profile__animation">
+                <div class="profile__animation-first">
+                    <div v-if="userData.user">{{ userData.user.username }}</div>
+                </div>
+                <div class="profile__animation-second">
+                    <div v-if="userData.user">{{ userData.user.username }}</div>
+                </div>
+                <div class="profile__animation-third">
+                    <div v-if="userData.user">{{ userData.user.username }}</div>
+                </div>
             </div>
-            <div class="profile__animation-second">
-                <div>{{ user.username }}</div>
-            </div>
-            <div class="profile__animation-third">
-                <div>{{ user.username }}</div>
-            </div>
+        </section>
+        <section class="profile__action">
+            <admin-panel v-if="userData.isAdmin"></admin-panel>
+            <user-panel v-else :userData="userData" @updatedUserData="updateUserData"></user-panel>
         </section>
     </main>
 </template>
 <script lang="ts">
-import { onBeforeMount, ref, defineComponent } from 'vue';
+import { onBeforeMount, reactive, defineComponent, toRefs } from 'vue';
 import { useRouter } from 'vue-router'
 import { requestData } from '../includes/requestData'
+import AdminPanel from '../components/AdminPanel.vue'
+import UserPanel from '../components/UserPanel.vue'
 export default defineComponent({
 
     name: 'ProfileView',
+    components: {
+        AdminPanel,
+        UserPanel
+    },
     setup() {
         const router = useRouter()
-        const user = ref()
-
-        onBeforeMount(async () => {
-
+        const userData = reactive({
+            user: null,
+            isAdmin: false
+        })
+        const { user } = toRefs(userData);
+        const fetchProfileData = async () => {
             const token = sessionStorage.getItem('token') || null
             if (token) {
                 const header = { Authorization: token }
                 const response = await requestData('profile', 'GET', undefined, header)
-                console.log(response.data)
                 if (response.data.length !== 0) {
-                    user.value = response.data[0]
+                    userData.user = response.data[0]
+                    userData.isAdmin = userData.user!.type === 'admin'
                 } else {
                     router.push('login')
                 }
             } else {
                 router.push('login')
             }
-        })
+        }
+        const updateUserData = (data) => {
+            if (user.value) {
+                user.value.id = data.userId;
+                user.value.username = data.username;
+                user.value.email = data.email;
+            }
+        };
+        onBeforeMount(fetchProfileData)
+
         return {
-            user,
+            userData,
+            updateUserData
         }
     }
 
@@ -92,17 +116,19 @@ export default defineComponent({
     }
 }
 
-.profile {
-    
-    font-size:24px;
+.profile__hero {
+    font-size: 24px;
     text-transform: uppercase;
-    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+
     .profile__header {
-        font-size: 24px;
+        font-size: 48px;
     }
+
     .profile__animation {
         height: 40px;
         overflow: hidden;
@@ -114,11 +140,11 @@ export default defineComponent({
             margin-bottom: 2.81rem;
             display: inline-block;
         }
-        
+
         div:first-child {
             animation: text-animation 8s infinite;
         }
-        
+
         .profile__animation-first div {
             background-color: #03e9f4;
         }
@@ -131,4 +157,5 @@ export default defineComponent({
             background-color: #03e9f4;
         }
     }
-}</style>
+}
+</style>

@@ -1,16 +1,16 @@
 <template>
     <Form formLabel="Register Form">
         <div class="form__box">
-            <input class="form__input-username" type="text" v-model="username">
-            <label>Username</label>
+            <input class="form__input-username" type="text" v-model="username" :class="{ 'has-value': username !== '' }">
+            <label class="form__input-label">Username</label>
         </div>
         <div class="form__box">
-            <input class="form__input-email" type="email" v-model="email">
-            <label>Email</label>
+            <input class="form__input-email" type="email" v-model="email" :class="{ 'has-value': email !== '' }">
+            <label class="form__input-label">Email</label>
         </div>
         <div class="form__box">
-            <input class="form__input-password" type="password" v-model="password">
-            <label>Password</label>
+            <input class="form__input-password" type="password" v-model="password" :class="{ 'has-value': password !== '' }">
+            <label class="form__input-label">Password</label>
             <password-meter :password="password" />
         </div>
         <a class="form__input-submit" href="#" @click.prevent="RegisterIn">
@@ -41,8 +41,6 @@ export default defineComponent({
         const router = useRouter()
         const username = ref('')
         const email = ref('')
-        const pass = ref('')
-        const created_at = '2017-10-10'
         const password = ref('');
 
         const RegisterIn = async () => {
@@ -50,8 +48,7 @@ export default defineComponent({
                 const isRegister = await requestData('register', 'POST', {
                     username: username.value,
                     email: email.value,
-                    password: pass.value,
-                    created_at: created_at
+                    password: password.value
                 })
                 if (isRegister.token) {
                     sessionStorage.setItem('token', isRegister.token)
@@ -67,7 +64,6 @@ export default defineComponent({
             RegisterIn,
             username,
             email,
-            pass,
             password
         }
     }

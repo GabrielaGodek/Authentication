@@ -4,8 +4,8 @@ import { connectionOptions } from './config'
 
 dotenv.config()
 
+const pool = mysql.createPool(connectionOptions);
 export async function executeQuery(query: string, values?: any[]): Promise<any> {
-    const pool = mysql.createPool(connectionOptions);
     let connection;
     try {
         connection = await pool.getConnection();

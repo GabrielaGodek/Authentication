@@ -9,4 +9,4 @@ export const connectionOptions: mysql.PoolOptions = {
     connectionLimit: 10,
 };
 
-export const secretKey = crypto.randomBytes(32).toString('hex');
+export const secretKey = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
