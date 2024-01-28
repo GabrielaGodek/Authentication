@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sty 25, 2024 at 10:13 PM
+-- Generation Time: Sty 28, 2024 at 11:06 PM
 -- Wersja serwera: 10.4.28-MariaDB
 -- Wersja PHP: 8.0.28
 
@@ -40,9 +40,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `email`, `type`) VALUES
-(1, 'admin', '$2b$10$W8PEyenCrwqi2ViwgKaUsuiCjydJtNFyvXl2ox98dbLJYDAHVHEGW', 'admin@admin.com', 'admin'),
-(2, 'Kate', '$2b$10$bd0JcxJBpCMzvD7HhTO/H.ZqqLSsyGCO6irgyG0qBpRjHFJFlyxky', 'kate1@mail.com', 'user'),
-(3, 'g0gab1s', '$2b$10$DWlPLhpTQ4R.cOgabW6DyebgKjFQ2UJvLOlHL6zqkAxVVTXmz5vv.', 'g0gab1s@gmail.com', 'user');
+(49, 'admin', '$2b$10$wMXviCW8MrYv.NUyj.BGRuObzEzfomFJdWvBibMUfi32T12AekQlC', 'admin@admin.com', 'admin'),
+(50, 'cate', '$2b$10$MBCcow3PrQ7eeJ2Mo0OKDOcDPOA8fDynwxcGYrWywdzJR8CUmxwnu', 'cate@cate.com', 'user'),
+(53, 'mike', '$2b$10$Hn6t/zGJA0EPcb6nczexiutx.wfUt2JD/1twnGy4uipGlDDEunSkW', 'mike@mike.com', 'user'),
+(54, 'ellen', '$2b$10$Hn6t/zGJA0EPcb6nczexiutx.wfUt2JD/1twnGy4uipGlDDEunSkW', 'ellen@ellen.com', 'user');
 
 --
 -- Indeksy dla zrzutów tabel
@@ -62,7 +63,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

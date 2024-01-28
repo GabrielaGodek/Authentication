@@ -5,7 +5,8 @@
             <label class="form__input-label">Email</label>
         </div>
         <div class="form__box">
-            <input class="form__input-password" type="password" v-model="password" :class="{ 'has-value': password !== '' }">
+            <input class="form__input-password" type="password" v-model="password"
+                :class="{ 'has-value': password !== '' }">
             <label class="form__input-label">Password</label>
         </div>
         <a class="form__input-submit" href="#" @click.prevent="LogIn">
@@ -31,14 +32,18 @@ export default defineComponent({
     setup() {
         const router = useRouter()
         const email = ref('');
-        const password = ref('');
+        const password = ref('')
+        // const csrfToken = ref('')
 
         const LogIn = async () => {
             try {
+                // document.cookie = `X-CSRF-Token=${csrfToken.value}`;
                 const isLogIn = await requestData('login', 'POST', {
                     email: email.value,
-                    password: password.value
-                });
+                    password: password.value,
+                }, 
+                // { 'X-CSRF-Token': csrfToken.value }
+                );
                 if (isLogIn.token) {
                     sessionStorage.setItem('token', isLogIn.token)
                     router.push('profile')
@@ -49,7 +54,14 @@ export default defineComponent({
                 console.error('Error during login:', err);
             }
         }
-
+        // onMounted(async () => {
+        //     try {
+        //         const response = await requestData('csrf', 'GET', undefined, undefined);
+        //         csrfToken.value = response.csrfToken;
+        //     } catch (err) {
+        //         console.error('Error fetching CSRF token:', err);
+        //     }
+        // });
         return {
             email,
             password,

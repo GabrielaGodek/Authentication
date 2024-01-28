@@ -11,7 +11,7 @@ export async function executeQuery(query: string, values?: any[]): Promise<any> 
         connection = await pool.getConnection();
         console.log('Connected to MySQL database');
 
-        const [rows, fields] = await connection.query(query, values);
+        const [rows, fields] = await connection.execute(query, values);
         return rows;
     } catch (error) {
         console.error('Error executing query:', error);

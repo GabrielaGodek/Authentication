@@ -5,6 +5,8 @@ import { executeQuery } from '../db/db_conn'
 import { secretKey } from '../db/config'
 import { MiddlewareRequest, Role } from '../includes/types'
 
+import csrf from 'csurf'
+
 export const getUsers: RequestHandler = async (req, res) => {
     try {
         const sql = `SELECT * FROM users`
@@ -31,6 +33,7 @@ export const registerUser: RequestHandler = async (req, res) => {
         }
         const token = jwt.sign({ userId: result.insertId }, secretKey, { expiresIn: '24h' });
         res.json({ success: true, message: 'Register Successful', token });
+        // res.json({ success: true, message: 'Register Successful', token, csrfToken: req.csrfToken() });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: 'Internal Server Error' });
@@ -39,11 +42,19 @@ export const registerUser: RequestHandler = async (req, res) => {
 
 export const loginUser: RequestHandler = async (req, res) => {
     try {
+        // const csrfToken = req.header('x-csrf-token');
+
         const { email, password } = req.body;
+        // console.log(csrfToken)
         if (!email || !password) {
             return res.status(400).json({ message: 'Email and Password are Required' });
         }
-
+        // if (csrfToken !== req.csrfToken()) {
+            // return res.status(403).json({ success: false, message: 'Invalid CSRF token' });
+        // }
+        // if (csrfToken !== req.header('X-CSRF-Token')) {
+        //     return res.status(403).json({ success: false, message: 'Invalid CSRF token' });
+        // }
         const sql = `SELECT * FROM users WHERE email = ?`;
         const result = await executeQuery(sql, [email]);
         console.log(result)
@@ -77,7 +88,7 @@ export const updateUser: RequestHandler = async (req, res): Promise<void> => {
         const result = await executeQuery(checkIfExist, [userId]);
 
         if (result.length > 0) {
-            console.log(password)
+            // console.log(password)
             const salt = await bcrypt.genSalt(10);
             const hashPass = await bcrypt.hash(password.trim(), salt);
             const updatedSql = 'UPDATE users SET username = ?, email= ?, password= ? WHERE id = ?';
