@@ -20,6 +20,7 @@ const props = defineProps(['formLabel']);
 
     .form__box {
         position: relative;
+        margin-bottom: 30px;
     }
 
     .form__box input {
@@ -27,7 +28,7 @@ const props = defineProps(['formLabel']);
         padding: 10px 0;
         font-size: 16px;
         color: #fff;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
         border: none;
         border-bottom: 1px solid #fff;
         outline: none;
@@ -49,9 +50,9 @@ const props = defineProps(['formLabel']);
         }
     }
 
-    .form__box input.form__input-password {
-        margin-bottom: 10px;
-    }
+    // .form__box input.form__input-password {
+    //     // margin-bottom: 10px;
+    // }
 
     .form__box .form__input-label {
         position: absolute;
@@ -63,6 +64,35 @@ const props = defineProps(['formLabel']);
         pointer-events: none;
         transition: .5s;
     }
-}
-</style>
+
+    .form__input-error {
+        position: absolute;
+        bottom: -14px;
+        right: 0;
+        left: 0;
+        color: #ED4337;
+        font-size: 14px;
+        animation: error;
+        animation-duration: .2s;
+        animation-iteration-count: 3;
+    }
+
+    @keyframes error {
+        0% {
+            transform: translate(-5px, 0);
+        }
+
+        25% {
+            transform: translate(5px, 0);
+        }
+
+        50% {
+            transform: translate(-5px, 0);
+        }
+
+        100% {
+            transform: translate(5px, 0);
+        }
+    }
+}</style>
 

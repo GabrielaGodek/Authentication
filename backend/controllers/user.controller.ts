@@ -3,7 +3,8 @@ import * as jwt from 'jsonwebtoken';
 import { RequestHandler, Response } from 'express';
 import { executeQuery } from '../db/db_conn'
 import { secretKey } from '../db/config'
-import { MiddlewareRequest, Role } from '../includes/types'
+import { MiddlewareRequest, Role, InputType } from '../includes/types'
+import { isValid } from '../includes/validation'
 
 import csrf from 'csurf'
 
@@ -21,6 +22,26 @@ export const getUsers: RequestHandler = async (req, res) => {
 export const registerUser: RequestHandler = async (req, res) => {
     try {
         const { username, password, email } = req.body;
+
+        if (!username || (typeof username !== 'string' && username.trim() === '') || !isValid(username, InputType.Username)) {
+            return res.status(400).json({ success: false, message: 'Invalid username' });
+        }
+
+        if (!password || (typeof password !== 'string' && password.trim() === '') || !isValid(password, InputType.Password)) {
+            return res.status(400).json({ success: false, message: 'Invalid password' });
+        }
+
+        if (!email || (typeof email !== 'string' && email.trim() === '') || !isValid(email, InputType.Email)) {
+            return res.status(400).json({ success: false, message: 'Invalid email' });
+        } else {
+            let checkIfExistSql = `SELECT id FROM users WHERE email = ?`
+            const result = await executeQuery(checkIfExistSql, [email]);
+            if(result.length > 0) {
+                return res.status(400).json({ success: false, message: 'User with provided email already exist' });
+            }
+        }
+
+
         const type: string = Role.User;
         const salt = await bcrypt.genSalt(10);
         const hashPass = await bcrypt.hash(password.trim(), salt);
@@ -50,7 +71,7 @@ export const loginUser: RequestHandler = async (req, res) => {
             return res.status(400).json({ message: 'Email and Password are Required' });
         }
         // if (csrfToken !== req.csrfToken()) {
-            // return res.status(403).json({ success: false, message: 'Invalid CSRF token' });
+        // return res.status(403).json({ success: false, message: 'Invalid CSRF token' });
         // }
         // if (csrfToken !== req.header('X-CSRF-Token')) {
         //     return res.status(403).json({ success: false, message: 'Invalid CSRF token' });

@@ -13,13 +13,19 @@ const requestData = async (url: string, method?: string, data?: object, header?:
         const responseData = await response.json();
 
         if (!response.ok) {
-            throw new Error(`Request failed with status ${response.status}`);
+            return {
+                success: false,
+                message: responseData,
+            };
         }
 
         return responseData;
     } catch (error) {
-        console.error(error);
-        throw error;
+        // console.error(error);
+        return {
+            success: false,
+            message: error! || 'An error occurred during the request.',
+        };
     }
 };
 

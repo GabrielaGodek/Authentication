@@ -24,5 +24,10 @@ export enum Role {
     Admin = 'admin',
     User = 'user'
 }
+export enum InputType {
+    Email = 'email',
+    Password = 'password',
+    Username = 'username'
+}
 
 
