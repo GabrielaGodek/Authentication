@@ -4,22 +4,22 @@
         Now you can:
         <div class="form" v-show="isUpdating">
             <form action="">
-                <div class="form__box">
+                <div class="form__box" :class="{ 'has-error-animation': isValidUser.isValid }">
                     <input class="form__input-username" type="text" v-model="username"
                         :class="{ 'has-value': username !== '' }">
                     <label class="form__input-label">Username</label>
+                    <span v-show="isValidUser.isValid" class="form__input-error" @animationend="resetAnimation">{{
+                        isValidUser.message }}</span>
                 </div>
-                <div class="form__box">
-                    <input class="form__input-email" type="email" v-model="email" :class="{ 'has-value': email !== '' }">
-                    <label class="form__input-label">Email</label>
-                </div>
-                <div class="form__box">
+                <div class="form__box" :class="{ 'has-error-animation': isValidPassword.isValid }">
                     <input class="form__input-password" type="password" v-model="password"
                         :class="{ 'has-value': password !== '' }">
                     <label class="form__input-label">Password</label>
                     <password-meter :password="password" />
+                    <span v-show="isValidPassword.isValid" class="form__input-error" @animationend="resetAnimation">{{
+                        isValidPassword.message }}</span>
                 </div>
-                <a class="form__input-submit" href="#" @click.prevent="updateUser">
+                <a class="form__input-submit" href="#" @click.prevent="UpdateUser">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -54,6 +54,8 @@ import { useRouter } from 'vue-router'
 import { requestData } from '../includes/requestData'
 // @ts-ignore
 import PasswordMeter from 'vue-simple-password-meter';
+import { isValid } from '../includes/isValid'
+import { ServerErrors, InputType, ValidateApiResponse, ValidationResults } from '../includes/types'
 export default defineComponent({
     name: 'UserPanel',
     props: {
@@ -67,8 +69,17 @@ export default defineComponent({
         const userId = user.value.id;
         const isUpdating = ref(false);
         const username = ref(user.value.username);
-        const email = ref(user.value.email);
         const password = ref('');
+
+        const isValidUser = ref({
+            isValid: false,
+            message: ''
+        })
+        const isValidPassword = ref({
+            isValid: false,
+            message: ''
+        })
+
 
         const router = useRouter()
         const handleUpdate = () => {
@@ -81,37 +92,93 @@ export default defineComponent({
                 router.push('/')
             }
         }
-        const updateUser = async () => {
-            try {
-                await requestData(`users/${userId}`, 'PUT', {
-                    username: username.value,
-                    email: email.value,
-                    password: password.value
-                }, undefined)
-                isUpdating.value = false
+        const validateInputs = () => {
+            const passwordValidation = isValid(password.value, InputType.Password);
+            const usernameValidation = isValid(username.value, InputType.Username);
 
-                emit('updatedUserData', {
-                    userId: userId,
-                    username: username.value,
-                    email: email.value
-                });
+            return {
+                password: passwordValidation,
+                username: usernameValidation
+            };
+        };
 
-            } catch (err) {
-                console.log(err)
+        const handleErrorResponse = (response: ValidateApiResponse) => {
+            isValidUser.value.isValid = false;
+            isValidPassword.value.isValid = false;
+
+            switch (response.message.error) {
+                case ServerErrors.INVALID_USERNAME:
+                    isValidUser.value.isValid = true;
+                    isValidUser.value.message = 'Invalid username';
+                    break;
+                case ServerErrors.INVALID_PASSWORD:
+                    isValidPassword.value.isValid = true;
+                    isValidPassword.value.message = 'Invalid password';
+                    break;
+                default:
+                    break;
             }
+        };
+
+        const updateValidationStatus = (validationResult: ValidationResults) => {
+            isValidPassword.value.isValid = !validationResult.password.isValid;
+            isValidPassword.value.message = validationResult.password.errorMessage;
+
+            isValidUser.value.isValid = !validationResult.username!.isValid;
+            isValidUser.value.message = validationResult.username!.errorMessage;
+        };
+
+        const UpdateUser = async () => {
+            try {
+                const validationResult = validateInputs();
+
+                if (validationResult.password.isValid || validationResult.username.isValid) {
+                    const data: Record<string, any> = {};
+
+                    if (validationResult.username.isValid) {
+                        data.username = username.value;
+                    }
+
+                    if (validationResult.password.isValid) {
+                        data.password = password.value;
+                    }
+                    console.log(data)
+                    const response = await requestData(`users/${userId}`, 'PUT', data);
+
+                    if (response.success) {
+                        emit('updatedUserData', {
+                            userId: userId,
+                            username: data.username,
+                        });
+                    } else {
+                        handleErrorResponse(response);
+                    }
+                } else {
+                    updateValidationStatus(validationResult);
+                }
+            } catch (err) {
+                console.error('Error during registration:', err);
+            }
+        };
+        const resetAnimation = () => {
+            setTimeout(() => {
+                isValidUser.value.isValid = false;
+                isValidPassword.value.isValid = false;
+
+            }, 3000)
         }
+
         return {
-            updateUser,
+            UpdateUser,
             isUpdating,
             handleUpdate,
             username,
-            email,
             password,
-            logOut
+            logOut,
+            isValidUser,
+            isValidPassword,
+            resetAnimation
         }
     }
 })
 </script>
-<style lang="">
-    
-</style>

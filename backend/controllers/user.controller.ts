@@ -3,8 +3,9 @@ import * as jwt from 'jsonwebtoken';
 import { RequestHandler, Response } from 'express';
 import { executeQuery } from '../db/db_conn'
 import { secretKey } from '../db/config'
-import { MiddlewareRequest, Role, InputType } from '../includes/types'
+// import {  } from '../includes/types'
 import { isValid } from '../includes/validation'
+import { Errors, ValidationResponse, MiddlewareRequest, Role, InputType } from '../includes/types'
 
 import csrf from 'csurf'
 
@@ -22,24 +23,27 @@ export const getUsers: RequestHandler = async (req, res) => {
 export const registerUser: RequestHandler = async (req, res) => {
     try {
         const { username, password, email } = req.body;
-
-        if (!username || (typeof username !== 'string' && username.trim() === '') || !isValid(username, InputType.Username)) {
-            return res.status(400).json({ success: false, message: 'Invalid username' });
+        const usernameValidation = isValid(username, InputType.Username)
+        const passwordValidation = isValid(password, InputType.Password)
+        const emailValidation = isValid(email, InputType.Email)
+        if (!username || (typeof username !== 'string' && username.trim() === '') || !usernameValidation.isValid) {
+            return res.status(400).json({ success: false, error: Errors.INVALID_USERNAME });
         }
 
-        if (!password || (typeof password !== 'string' && password.trim() === '') || !isValid(password, InputType.Password)) {
-            return res.status(400).json({ success: false, message: 'Invalid password' });
+        if (!password || (typeof password !== 'string' && password.trim() === '') || !passwordValidation.isValid) {
+            return res.status(400).json({ success: false, error: Errors.INVALID_PASSWORD });
         }
 
-        if (!email || (typeof email !== 'string' && email.trim() === '') || !isValid(email, InputType.Email)) {
-            return res.status(400).json({ success: false, message: 'Invalid email' });
-        } else {
-            let checkIfExistSql = `SELECT id FROM users WHERE email = ?`
-            const result = await executeQuery(checkIfExistSql, [email]);
-            if(result.length > 0) {
-                return res.status(400).json({ success: false, message: 'User with provided email already exist' });
-            }
+        if (!email || (typeof email !== 'string' && email.trim() === '') || !emailValidation.isValid) {
+            return res.status(400).json({ success: false, error: Errors.INVALID_EMAIL });
         }
+        let checkIfExistSql = `SELECT id FROM users WHERE email = ?`
+        const checkIfExistResult = await executeQuery(checkIfExistSql, [email]);
+        console.log(checkIfExistResult)
+        if (checkIfExistResult.length > 0) {
+            return res.status(400).json({ success: false, error: Errors.USER_EXIST });
+        }
+
 
 
         const type: string = Role.User;
@@ -95,10 +99,28 @@ export const loginUser: RequestHandler = async (req, res) => {
     }
 };
 
-export const updateUser: RequestHandler = async (req, res): Promise<void> => {
+export const updateUser: RequestHandler = async (req, res) => {
     try {
-        const { username, email, password } = req.body
+        const { username, password } = req.body
         const userId = req.params.id
+        console.log(username)
+        console.log(password)
+        let usernameValidation: ValidationResponse
+        let passwordValidation: ValidationResponse
+        if (username !== undefined) {
+            usernameValidation = isValid(username, InputType.Username);
+
+            if (typeof username !== 'string' || username.trim() === '' || !usernameValidation.isValid) {
+                return res.status(400).json({ success: false, error: Errors.INVALID_USERNAME });
+            }
+        }
+        if (password !== undefined) {
+            passwordValidation = isValid(password, InputType.Password);
+
+            if (typeof password !== 'string' || password.trim() === '' || !passwordValidation.isValid) {
+                return res.status(400).json({ success: false, error: Errors.INVALID_PASSWORD });
+            }
+        }
         console.log(userId)
         if (!userId) {
             res.status(400).json({ success: false, error: 'Invalid user ID' });
@@ -109,20 +131,36 @@ export const updateUser: RequestHandler = async (req, res): Promise<void> => {
         const result = await executeQuery(checkIfExist, [userId]);
 
         if (result.length > 0) {
-            // console.log(password)
-            const salt = await bcrypt.genSalt(10);
-            const hashPass = await bcrypt.hash(password.trim(), salt);
-            const updatedSql = 'UPDATE users SET username = ?, email= ?, password= ? WHERE id = ?';
-            await executeQuery(updatedSql, [username, email, hashPass, userId])
-            res.json({ success: true, message: 'User updated' });
-        } else {
-            res.status(404).json({ success: false, error: 'User not found' });
+            let updateFields = [];
+            let values = [];
+
+            if (username !== undefined) {
+                updateFields.push('username = ?');
+                values.push(username);
+            }
+            if (password !== undefined) {
+                const salt = await bcrypt.genSalt(10);
+                const hashPass = await bcrypt.hash(password.trim(), salt);
+                updateFields.push('password = ?');
+                values.push(hashPass);
+            }
+            if (updateFields.length > 0) {
+                console.log(values)
+                const updatedSql = `UPDATE users SET ${updateFields.join(', ')} WHERE id = ?`;
+                values.push(userId);
+
+                await executeQuery(updatedSql, values);
+                res.json({ success: true, message: 'User updated' });
+            } else {
+                res.status(404).json({ success: false, error: 'User not found' });
+            }
         }
     } catch (error) {
         console.error('Error updating user:', error);
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 };
+
 export const deleteUser: RequestHandler = async (req, res): Promise<void> => {
     try {
         const userId = req.params.id;

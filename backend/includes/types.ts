@@ -29,5 +29,14 @@ export enum InputType {
     Password = 'password',
     Username = 'username'
 }
-
+export enum Errors {
+    INVALID_USERNAME = 'INVALID_USERNAME',
+    INVALID_PASSWORD = 'INVALID_PASSWORD',
+    INVALID_EMAIL = 'INVALID_EMAIL',
+    USER_EXIST = 'USER_EXIST',
+}
+export interface ValidationResponse {
+    isValid: boolean;
+    errorMessage: string;
+}
 

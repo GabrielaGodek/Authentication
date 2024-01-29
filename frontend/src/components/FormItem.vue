@@ -50,10 +50,6 @@ const props = defineProps(['formLabel']);
         }
     }
 
-    // .form__box input.form__input-password {
-    //     // margin-bottom: 10px;
-    // }
-
     .form__box .form__input-label {
         position: absolute;
         top: 0px;
@@ -94,5 +90,6 @@ const props = defineProps(['formLabel']);
             transform: translate(5px, 0);
         }
     }
-}</style>
+}
+</style>
 

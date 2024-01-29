@@ -26,6 +26,8 @@ import { useRouter } from 'vue-router'
 import { requestData } from '../includes/requestData'
 import AdminPanel from '../components/AdminPanel.vue'
 import UserPanel from '../components/UserPanel.vue'
+import { UpdatedUserData, UserData } from '../includes/types'
+
 export default defineComponent({
 
     name: 'ProfileView',
@@ -35,7 +37,7 @@ export default defineComponent({
     },
     setup() {
         const router = useRouter()
-        const userData = reactive({
+        const userData = reactive <UserData> ({
             user: null,
             isAdmin: false
         })
@@ -55,9 +57,9 @@ export default defineComponent({
                 router.push('login')
             }
         }
-        const updateUserData = (data) => {
+        const updateUserData = (data: UpdatedUserData) => {
             if (user.value) {
-                user.value.id = data.userId;
+                user.value.userId = data.userId;
                 user.value.username = data.username;
                 user.value.email = data.email;
             }

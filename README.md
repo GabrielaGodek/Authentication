@@ -39,6 +39,11 @@ Password hashing is implemented using `bcrypt`. Additionally, a `jwt` token is g
 To prevent SQL Injection attacks the `execute` method is used instead of `query` to interact with the MySQL database. 
 The execute method automatically employs prepared statements, which involve using placeholders (?) for variable values in SQL queries. When using placeholders, actual values are passed separately in an array as the second parameter of the function. This approach ensures that user input is properly sanitized and escaped.
 
+### Input validation on BE and FE end
+Input validation on both the front-end and back-end is crucial because it serves as a two-tiered defense against erroneous or malicious data. On the front-end, validation _ensures a seamless user experience_ by catching and preventing basic errors before the data is even submitted. This not only enhances user satisfaction but also _reduces the likelihood of unnecessary server requests, optimizing performance_.
+On the back-end, _validation is essential for security and data integrity_. It acts as a robust barrier against potential threats such as injection attacks or the submission of harmful data.
+
+
 <!-- ### Cross-site request forgery
 To mitigate CSRF attacks, middleware has been implemented on the Express.js server. This middleware helps protect against unauthorized cross-site requests, enhancing the overall security of the application. Additionally, it is crucial to incorporate CSRF tokens into the application's forms, ensuring an additional layer of defense against potential threats. -->
 

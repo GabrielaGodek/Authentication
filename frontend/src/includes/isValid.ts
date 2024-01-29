@@ -1,8 +1,9 @@
+
 import { InputType, ValidationResponse } from './types'
 export const isValid = (plainText: string, type: InputType): ValidationResponse => {
     let regex: RegExp
     let errorMessage: string
-    // console.log(/[a-zA-Z0-9]{3,16}/.test(plainText))
+
     if (type === InputType.Email) {
         regex = /\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/
         errorMessage = 'Invalid email';

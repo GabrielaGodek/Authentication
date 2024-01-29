@@ -10,10 +10,11 @@ export async function executeQuery(query: string, values?: any[]): Promise<any> 
     try {
         connection = await pool.getConnection();
         console.log('Connected to MySQL database');
-
+        
         const [rows, fields] = await connection.execute(query, values);
         return rows;
     } catch (error) {
+        // console.log('Connected failed');
         console.error('Error executing query:', error);
         throw error;
     } finally {
