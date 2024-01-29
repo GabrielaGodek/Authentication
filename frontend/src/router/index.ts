@@ -23,6 +23,12 @@ const routes: Array<RouteRecordRaw> = [
         name: 'profile',
         props: route => ({ email: route.query.email }),
         component: () => import('../views/ProfileView.vue')
+    },
+    {
+        path: '/:catchAll(.*)',
+        name: '404',
+        props: route => ({ email: route.query.email }),
+        component: () => import('../views/404.vue')
     }
 ];
 

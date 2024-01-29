@@ -30,7 +30,14 @@
     bottom: 100%;
   }
 }
+@keyframes slideIn {
+  100% {
+    transform: translateY(-20px);
+    opacity: 1;
+  }
+}
 .hero__button,
+.not_found__buttons,
 .form__input-submit {
   position: relative;
   display: inline-block;
@@ -45,6 +52,7 @@
   letter-spacing: 4px;
 }
 .hero__button:hover,
+.not_found__buttons:hover,
 .form__input-submit:hover {
   background: #03e9f4;
   color: #fff;
@@ -52,11 +60,13 @@
   box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 100px #03e9f4;
 }
 .hero__button span,
+.not_found__buttons span,
 .form__input-submit span {
   position: absolute;
   display: block;
 }
 .hero__button span:nth-child(1),
+.not_found__buttons span:nth-child(1),
 .form__input-submit span:nth-child(1) {
   top: 0;
   left: -100%;
@@ -66,6 +76,7 @@
   animation: btn-anim1 1s linear infinite;
 }
 .hero__button span:nth-child(2),
+.not_found__buttons span:nth-child(2),
 .form__input-submit span:nth-child(2) {
   top: -100%;
   right: 0;
@@ -76,6 +87,7 @@
   animation-delay: 0.25s;
 }
 .hero__button span:nth-child(3),
+.not_found__buttons span:nth-child(3),
 .form__input-submit span:nth-child(3) {
   bottom: 0;
   right: -100%;
@@ -86,6 +98,7 @@
   animation-delay: 0.5s;
 }
 .hero__button span:nth-child(4),
+.not_found__buttons span:nth-child(4),
 .form__input-submit span:nth-child(4) {
   bottom: -100%;
   left: 0;

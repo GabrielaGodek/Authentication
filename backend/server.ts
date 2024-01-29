@@ -21,6 +21,9 @@ app.get('/profile', authenticate, getProfile);
 app.get('/', (req, res) => {
     res.json({ message: `Server is running at ${port}` })
 })
+app.get('*', (req, res) => {
+    res.json({ message: `404 Not Found` })
+})
 
 
 app.delete('/users/:id', deleteUser);

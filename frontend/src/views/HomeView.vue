@@ -60,12 +60,12 @@ export default defineComponent({
         margin: 20px;
     }
 
-    @keyframes slideIn {
-        100% {
-            transform: translateY(-20px);
-            opacity: 1;
-        }
-    }
+    // @keyframes slideIn {
+    //     100% {
+    //         transform: translateY(-20px);
+    //         opacity: 1;
+    //     }
+    // }
 
     .hero__paragraph {
         font-size: 20px;
