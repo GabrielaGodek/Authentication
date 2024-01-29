@@ -57,7 +57,6 @@ export default defineComponent({
                 password: passwordValidation
             };
         };
-        // console.log(validateInputs())
         const handleErrorResponse = (response: ValidateApiResponse) => {
             isValidEmail.value.isValid = false;
             isValidPassword.value.isValid = false;
@@ -76,9 +75,6 @@ export default defineComponent({
             }
         };
         const updateValidationStatus = (validationResult: ValidationResults) => {
-            console.log(validationResult)
-            // isValidEmail.value.isValid = true;
-            // isValidPassword.value.isValid = true;
             isValidEmail.value.isValid = !validationResult.email!.isValid;
             isValidEmail.value.message = validationResult.email!.errorMessage;
 
@@ -88,15 +84,13 @@ export default defineComponent({
         const LogIn = async () => {
             try {
                 const validationResult = validateInputs();
-                console.log(validationResult)
+
                 if (validationResult.email.isValid && validationResult.password.isValid) {
 
                     const response = await requestData('login', 'POST', {
                         email: email.value,
                         password: password.value,
                     });
-
-                    console.log(response);
 
                     if (response.success) {
                         sessionStorage.setItem('token', response.token);

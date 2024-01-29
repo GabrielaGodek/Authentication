@@ -1,7 +1,7 @@
 <template >
     <div>
-        <h3>Thanks for signing for our community</h3>
-        Now you can:
+        <h3 v-show="!isUpdating">Thanks for signing up for our community</h3>
+
         <div class="form" v-show="isUpdating">
             <form action="">
                 <div class="form__box" :class="{ 'has-error-animation': isValidUser.isValid }">
@@ -28,24 +28,26 @@
                 </a>
             </form>
         </div>
+
+        <p v-show="!isUpdating">Now you can:</p>
+
         <div class="hero__buttons">
-            <div class="hero__button hero__buttons-login" @click="logOut">
+            <div class="hero__button hero__buttons-logout" v-show="!isUpdating" @click="logOut">
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
                 Log out
             </div>
-            <div class="hero__button hero__buttons-login" @click="handleUpdate">
+            <div class="hero__button hero__buttons-openForm" :class="{'close-form': isUpdating }" @click="handleUpdate">
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
-                Update account
+                <template v-if="isUpdating">Close form</template>
+                <template v-else>Update account</template>
             </div>
         </div>
-
-
     </div>
 </template>
 <script lang="ts">
@@ -142,7 +144,7 @@ export default defineComponent({
                     if (validationResult.password.isValid) {
                         data.password = password.value;
                     }
-                    console.log(data)
+
                     const response = await requestData(`users/${userId}`, 'PUT', data);
 
                     if (response.success) {
@@ -182,3 +184,10 @@ export default defineComponent({
     }
 })
 </script>
+
+<style>
+.close-form > span {
+    animation: none !important;
+    background: transparent;
+}
+</style>

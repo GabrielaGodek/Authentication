@@ -11,7 +11,7 @@ const requestData = async (url: string, method?: string, data?: object, header?:
 
         const response = await fetch(`http://localhost:8080/${url}`, options);
         const responseData = await response.json();
-console.log(responseData)
+
         if (!response.ok) {
             return {
                 success: false,
@@ -21,7 +21,7 @@ console.log(responseData)
 
         return responseData;
     } catch (error) {
-        // console.error(error);
+
         return {
             success: false,
             message: error! || 'An error occurred during the request.',

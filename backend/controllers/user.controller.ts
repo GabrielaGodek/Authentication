@@ -67,22 +67,15 @@ export const registerUser: RequestHandler = async (req, res) => {
 
 export const loginUser: RequestHandler = async (req, res) => {
     try {
-        // const csrfToken = req.header('x-csrf-token');
 
         const { email, password } = req.body;
-        // console.log(csrfToken)
         if (!email || !password) {
             return res.status(400).json({ message: 'Email and Password are Required' });
         }
-        // if (csrfToken !== req.csrfToken()) {
-        // return res.status(403).json({ success: false, message: 'Invalid CSRF token' });
-        // }
-        // if (csrfToken !== req.header('X-CSRF-Token')) {
-        //     return res.status(403).json({ success: false, message: 'Invalid CSRF token' });
-        // }
+
         const sql = `SELECT * FROM users WHERE email = ?`;
         const result = await executeQuery(sql, [email]);
-        console.log(result)
+
         if (result.length === 0) {
             return res.status(400).json({ message: 'No user in the database' });
         }
@@ -103,8 +96,7 @@ export const updateUser: RequestHandler = async (req, res) => {
     try {
         const { username, password } = req.body
         const userId = req.params.id
-        console.log(username)
-        console.log(password)
+
         let usernameValidation: ValidationResponse
         let passwordValidation: ValidationResponse
         if (username !== undefined) {
@@ -121,7 +113,6 @@ export const updateUser: RequestHandler = async (req, res) => {
                 return res.status(400).json({ success: false, error: Errors.INVALID_PASSWORD });
             }
         }
-        console.log(userId)
         if (!userId) {
             res.status(400).json({ success: false, error: 'Invalid user ID' });
             return
@@ -145,7 +136,7 @@ export const updateUser: RequestHandler = async (req, res) => {
                 values.push(hashPass);
             }
             if (updateFields.length > 0) {
-                console.log(values)
+
                 const updatedSql = `UPDATE users SET ${updateFields.join(', ')} WHERE id = ?`;
                 values.push(userId);
 

@@ -13,12 +13,6 @@ const port = 8080
 app.use(express.json())
 app.use(cors())
 
-// app.use(cookieParser());
-// const csrfProtect = csrf({
-//     cookie: true
-// })
-// app.use(csrfProtect);
-
 app.post('/login', loginUser)
 app.post('/register', registerUser)
 
@@ -28,9 +22,6 @@ app.get('/', (req, res) => {
     res.json({ message: `Server is running at ${port}` })
 })
 
-// app.get('/csrf', (req, res) => {
-//     res.json({ csrfToken: req.csrfToken() });
-// });
 
 app.delete('/users/:id', deleteUser);
 
