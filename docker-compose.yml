@@ -1,0 +1,26 @@
+version: '3'
+services:
+  frontend: 
+    build: ./frontend 
+    ports: 
+      - "5173:5173"
+    container_name: fe-cryptamine
+    restart: always
+    links:
+      - backend
+
+  backend: 
+    build: ./backend
+    ports:
+      - "8080:8080"
+    container_name: be-cryptamine
+    restart: always
+    links:
+      - db
+
+  db:
+    image: mysql:8.3.0
+    ports:
+    - "5432:5432"
+    container_name: db-cryptamine
+    restart: always

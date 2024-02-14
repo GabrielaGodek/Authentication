@@ -5,8 +5,9 @@ A full-stack application encompassing authentication and authorization. The impl
 ## Installation
 1. Clone this repo: https://github.com/GabrielaGodek/Cryptamine.git.
 2. Open XAMPP and run Apache Web Server and MySQL Database.
-3. Open an type in the browser localhost/phpmyadmin.
+3. Open and type in the browser: localhost/phpmyadmin.
 4. Upload `users.sql` from _backend/db_ folder.
+5. At the root folder in terminal run `docker-compose up --build`
 
 This database contain few fake users and admins, but feel free to register and add your account to database!
 
