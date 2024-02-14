@@ -24,3 +24,7 @@ services:
     - "5432:5432"
     container_name: db-cryptamine
     restart: always
+    environment:
+      MYSQL_DATABASE: auth
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_ROOT_PASSWORD: ""
